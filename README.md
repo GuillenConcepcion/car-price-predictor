@@ -8,7 +8,7 @@ A machine learning system for predicting car prices using MLflow and Streamlit. 
 - **Backend**: FastAPI REST API for data management
 - **ML Pipeline**: MLflow for model management and serving
 - **Storage**: PostgreSQL for data storage, MinIO for model artifacts
-- 
+  
 ```mermaid
  graph TB
     UI[Streamlit UI:8501] --> API[FastAPI:8000]
