@@ -1,0 +1,17 @@
+{
+    "name": "cars-connector",
+    "config": {
+        "connector.class": "io.debezium.connector.postgresql.PostgresConnector",
+        "tasks.max": "1",
+        "database.hostname": "postgres",
+        "database.port": "5432",
+        "database.user": "postgres",
+        "database.password": "postgres123",
+        "database.dbname": "cars_db",
+        "database.server.name": "cars",
+        "topic.prefix": "cars-db",
+        "schema.include.list": "public",
+        "table.include.list": "public.listings",
+        "plugin.name": "pgoutput"
+    }
+}
