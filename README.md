@@ -10,65 +10,48 @@ A machine learning system for predicting car prices using MLflow and Streamlit. 
 - **Storage**: PostgreSQL for data storage, MinIO for model artifacts
 - 
 ```mermaid
- flowchart TB
-    subgraph User["User Interface Layer"]
-        ST[Streamlit UI\n8501]
-        API[FastAPI\n8000]
-        ADM[Adminer\n8081]
-        KUI[Kafka UI\n8080]
-        MLF[MLflow UI\n5000]
+ graph TB
+    UI[Streamlit UI:8501] --> API[FastAPI:8000]
+    API --> DB[(PostgreSQL:5432)]
+    DB --> DEB[Debezium:8083]
+    DEB --> KAFKA[Kafka:9092]
+    KAFKA --> ML[ML Service]
+    ML --> MLFLOW[MLflow:5000]
+    MLFLOW --> MINIO[(MinIO:9000)]
+    ML --> KAFKA
+    KAFKA --> API
+    API --> DB
+
+    ADMIN[Adminer:8081] --> DB
+    KAFKAUI[Kafka UI:8080] --> KAFKA
+    ZK[Zookeeper:2181] --> KAFKA
+    
+    subgraph "User Interface"
+        UI
+        ADMIN
+        KAFKAUI
     end
 
-    subgraph Data["Data Storage Layer"]
-        PG[(PostgreSQL\n5432)]
-        MIN[(MinIO\n9000/9001)]
+    subgraph "Storage"
+        DB
+        MINIO
     end
 
-    subgraph Stream["Stream Processing Layer"]
-        KAF[Kafka\n9092]
-        DEB[Debezium\n8083]
-        ZK[Zookeeper\n2181]
+    subgraph "Processing"
+        KAFKA
+        DEB
+        ML
+        MLFLOW
+        ZK
     end
 
-    subgraph ML["ML Service Layer"]
-        MLS[ML Service]
-        MLM[MLflow Server]
-    end
-
-    %% User Interactions
-    ST -->|1. Add/View Cars| API
-    API -->|2. Store Data| PG
-    ADM -->|"DB Management"| PG
-
-    %% Data Pipeline
-    PG -->|3. CDC| DEB
-    DEB -->|4. Changes| KAF
-    ZK -.->|"Manages"| KAF
-    KUI -->|"Monitor"| KAF
-
-    %% ML Pipeline
-    KAF -->|5. New Car Data| MLS
-    MLS -->|6. Get Model| MLM
-    MLM -->|"Store Models"| MIN
-    MLS -->|7. Predictions| KAF
-
-    %% Update Pipeline
-    API -->|8. Consume Predictions| KAF
-    API -->|9. Update DB| PG
-    ST -->|10. Display Results| API
-
-    %% ML Management
-    MLF -->|"Manage Models"| MLM
-
-    classDef primary fill:#2563eb,stroke:#1d4ed8,color:#ffffff
-    classDef secondary fill:#4b5563,stroke:#374151,color:#ffffff
-    classDef storage fill:#059669,stroke:#047857,color:#ffffff
-    classDef service fill:#7c3aed,stroke:#6d28d9,color:#ffffff
-
-    class ST,API,ADM,KUI,MLF primary
-    class KAF,DEB,ZK secondary
-    class PG,MIN storage
-    class MLS,MLM service
+    style UI fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style API fill:#2563eb,stroke:#1d4ed8,color:#fff
+    style DB fill:#059669,stroke:#047857,color:#fff
+    style MINIO fill:#059669,stroke:#047857,color:#fff
+    style KAFKA fill:#4b5563,stroke:#374151,color:#fff
+    style ML fill:#7c3aed,stroke:#6d28d9,color:#fff
+    style MLFLOW fill:#7c3aed,stroke:#6d28d9,color:#fff
 
 ```
 
