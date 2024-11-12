@@ -8,6 +8,7 @@ A machine learning system for predicting car prices using MLflow and Streamlit. 
 - **Backend**: FastAPI REST API for data management
 - **ML Pipeline**: MLflow for model management and serving
 - **Storage**: PostgreSQL for data storage, MinIO for model artifacts
+- 
 ```mermaid
   flowchart TB
     subgraph User["User Interface Layer"]
@@ -68,7 +69,9 @@ A machine learning system for predicting car prices using MLflow and Streamlit. 
     class KAF,DEB,ZK secondary
     class PG,MIN storage
     class MLS,MLM service
-```mermaid
+```
+
+
 ## Prerequisites
 
 - Docker and Docker Compose
